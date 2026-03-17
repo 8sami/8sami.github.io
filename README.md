@@ -1,5 +1,3 @@
-# Project Proposal Template
-
 <table>
     <thead>
         <tr>
@@ -14,7 +12,7 @@
         </tr>
         <tr>
             <td><strong>Organisation Details</strong></td>
-            <td>College: Islamia Govt. Science College, Sukkur<br>Program: Computer Science<br>Current Grade: 12th<br>Expected Graduation Date: August 2026</td>
+            <td>College: Islamia Govt. Science College Sukkur<br>Program: Computer Science<br>Grade: 12th<br>Expected Graduation Date: June 2026</td>
         </tr>
         <tr>
             <td><strong>Contact Details</strong></td>
@@ -67,11 +65,9 @@
 **Availability and Commitment**
 
 * 40-50 hours per week
-* <strong>Any other engagements during the project period</strong> <br/> My board exams will be from 16 april to 25 april 2026 and I'll be taking a gap year so I won't be busy preparing for entrance exams. Although I'll be studying for SAT and training for national powerlifting competition for 2-3 hours daily.
+* I'll be studying for SAT and training for national powerlifting competition for 2-3 hours daily. Will be done with Board exams which are from 16 april to 25 april 2026 and I won't be preparing for entrance exams until next year.
 
 **Contribution to OHC Repo** (if applicable)
-
-* Provide Links to any previous contributions to the organization's repositories
 
 1. https://github.com/ohcnetwork/care_fe/pull/16086 <br/>
 2. https://github.com/ohcnetwork/care_fe/pull/16085 <br/>
