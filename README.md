@@ -47,35 +47,31 @@
 
 * **Title**: Whatsapp bot for CARE
 * **Project Overview**: 
-    IM wrapper is a djano plugin based instant messaging provider meant to provide staff and patients ease of access to medical data through any messaging app, quickly and securely. 
+    IM wrapper is a djano plugin based instant messaging provider meant to provide staff and patients ease of access to medical data through any messaging app, quickly and securely.
+    
+    Although the care web app already provides all the information, but people such as those living in rural/remote areas could greatly benefit from accessing their medical records and appointments through a simple message on whatsapp instead of having to navigate a web app which could prove difficult for people with limited digital exposure.
 
     The provider approach makes the instant messaging functionality independant of any messaging app, ensuring each one's support can be developed, maintained and tested without intefering with other messaging provider's implementation.
 
-    Developing it as a plugin ensures that we wont have to worry about interfering with care's backend. As a plugin, it can be removed, added, updated any time without affecting the core backend. This keeps the core backend clean and lean which ensures good maintainability and developer experience. 
+    Developing it as a plugin ensures that we wont have to worry about interfering with care's backend. As a plugin, it can be removed, added, updated any time without affecting the core backend. This keeps the core backend clean and lean which ensures good maintainability and good developer experience. 
 
     **Specification:**
     
-    1. **Architecture**: Plugin based, using the the django cookie cutter template. 
-    
+    1. **Architecture**: Plugin based, using the the django cookie cutter template.    
     2. **Authentication**: Two step authentication, first is matching the requestor's phone number with the number associated with a patient or staff member in the database. The second step is asking for DOB to confirm identity. If the requestor fails to provide correct DOB within 3 attempts, the request is blocked for 15 minutes. 
-
-    3. **Authorization**: The authorization is managed via the type of account (staff or patient) and roles permissions logic in the care backend. For example a patient can only access their own data, while a staff member can access the data of patients in their care.
-
-    4. **Caching**:
-
-    5. **Rate Limiting**:
-
-    6. **Error Handling**:
-
-    7. **Logging**:
-
-    8. **Testing**:
-
-    9. **Documentation**:
-
-    10. **Deployment**:
+    3. **Authorization**: The authorization is managed via the type of account (staff or patient) and roles permissions logic in the care backend. For example a patient can only access their own data, while a staff member can access the data of patients.
+    4. **Caching**: Caching using redis to reduce latency and database load.
+    5. **Rate Limiting**: Rate limiting and debouncing to prevent spam and abuse.
+    6. **Error Handling**: Proper error handling.
+    7. **Audit Logging**: Audit logging using the existing care.audit_log package.
+    8. **Testing**: Proper tests using playwright and pytest.
+    9. **Documentation**: Documentation via sphinx.
   
-    including my understanding and its use case
+    **Use Cases**: 
+    1. Since care provides teleICU services to many remote areas of India, it makes a lot of sense to provide ease of access to medical data to the people living in those areas where issues like internet connectivity, digial literacy and lack of access to computers are prevalent. 
+    2. Accessing information via whatsapp is much more convenient and faster than having to log in to the web app. This image aims to depict the time it may take to access information via both methods: [insert image showcasing 2 diagrams of time taken to access info]
+    3. Using messaging apps like whatsapp is more familiar and easier to use for people than navigating a web app, which could be daunting for some.
+    4. 
 
 * **Features**: 
   1. List of five features I appreciate in the platform
@@ -83,7 +79,6 @@
 #### Technical Skills and Relevant Experience
 
 * My technical skills include Python, Javascript, Typescript, React, Nextjs, Django, Flask, SQL, Git, Github, Docker, Linux
-
 * My first full stack project, "Simple Invoice Generator" was built using Django, weasyprint, crispy-bootstrap5 and jinja. That project recorded almost 2 Cr of transactions for a procurement service provider and then as I was developing its v2 using nextjs, shadcn, reactPDF and django ninja the business completed its tenure. I reviewed the code a few weeks ago... it needs a lot of work but I plan to deploy it as a free open source tool this year.
 
     I have a YOE working as a software dev remotely for an Australian agency where I got the chance to work on production grade code across various projects using different technologies and working in a high stakes environment has taught me a lot about problem solving while respecting the tight deadlines.
