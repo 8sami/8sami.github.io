@@ -46,19 +46,19 @@
 #### Project Proposal
 
 * **Title**: Whatsapp bot for CARE
-* **Project Overview**: 
+* **Project Overview**:
     IM wrapper is a djano plugin based instant messaging provider meant to provide staff and patients ease of access to medical data through any messaging app, quickly and securely. Additionally, it also aims to add functionality of sending alerts and notifications via the configured messaging providers.
-    
+
     Although the care web app already provides all the information, but people such as those living in rural/remote areas could greatly benefit from accessing their medical records and appointments through a simple message on whatsapp instead of having to navigate a web app which could prove difficult for people with limited digital exposure.
 
     The provider approach makes the instant messaging functionality independant of any messaging app, ensuring each one's support can be developed, maintained and tested without intefering with other messaging provider's implementation.
 
-    Developing it as a plugin ensures that we wont have to worry about it interfering with care's backend. As a plugin, it can be removed, added, updated any time without affecting the core backend. This keeps the core backend clean and lean which ensures good maintainability and good developer experience. 
+    Developing it as a plugin ensures that we wont have to worry about it interfering with care's backend. As a plugin, it can be removed, added, updated any time without affecting the core backend. This keeps the core backend clean and lean which ensures good maintainability and good developer experience.
 
     **Specification:**
 
-    1. Architecture: Plugin based, using the the django cookie cutter template.    
-    2. Authentication: Two step authentication, first is matching the requestor's phone number with the number associated with a patient or staff member in the database. The second step is asking for DOB to confirm identity. If the requestor fails to provide correct DOB within 3 attempts, the request is blocked for 15 minutes. 
+    1. Architecture: Plugin based, using the the django cookie cutter template.
+    2. Authentication: Two step authentication, first is matching the requestor's phone number with the number associated with a patient or staff member in the database. The second step is asking for DOB to confirm identity. If the requestor fails to provide correct DOB within 3 attempts, the request is blocked for 15 minutes.
     3. Authorization: The authorization is managed via the type of account (staff or patient) and roles permissions logic in the care backend. For example a patient can only access their own data, while a staff member can access the data of patients.
     4. Caching: Caching using redis to reduce latency and database load.
     5. Rate Limiting: Rate limiting and debouncing to prevent spam and abuse.
@@ -67,20 +67,23 @@
     8. Testing: Proper tests using playwright and pytest.
     9. Documentation: Documentation using sphinx.
   
-
     **Flow of Program:**
     This flowchart helps illustrates the flow of program of the IM Wrapper (excluding the alert functionality):
-    
+
     <a href="https://miro.com/app/board/uXjVG1KxNJM=/">
-    <img title="Click to open the flowchart in miro" src="flowchart.png" alt="flowchart illustrating the flow of program" width="800"/>
+    <img title="Click to open the flowchart in miro" src="media/flowchart.png" alt="flowchart illustrating the flow of program" width="800"/>
     </a>
 
-    **Use Cases**: 
-    10. Since care provides teleICU services to many remote areas of India, it makes a lot of sense to provide ease of access to medical data to the people living in those areas where issues like internet connectivity, digial literacy and lack of access to computers are prevalent. 
-    11. Accessing information via whatsapp is much more convenient and faster than having to log in to the web app. This image aims to depict the time it may take to access information via both methods: [insert image showcasing 2 diagrams of time taken to access info]
-    12. Using messaging apps like whatsapp is more comfortable and easier to use for people because of its familiarity than navigating a web app, which can be daunting for some.
+    **Use Cases**:
+    1. Since care provides teleICU services to many remote areas of India, it makes a lot of sense to provide ease of access to medical data to the people living in those areas where issues like internet connectivity, digial literacy and lack of access to computers are prevalent.
+    2. Using messaging apps like whatsapp is more comfortable and easier to use for people because of its familiarity than navigating a web app, which can be daunting for some.
+    3. Accessing information via whatsapp is much more convenient and faster than having to log in to the care web app.
 
-* **Features**: 
+        The below attached image aims to depict the time it may take to access information via both methods by showing the difference in number of steps:
+
+        <img title="Difference in time taken to access medical info" src="media/difference_in_time_taken.png" alt="image illustrating the difference b/w the time it takes to access info" width="800"/>
+
+* **Features**:
   1. List of five features I appreciate in the platform
 
 #### Technical Skills and Relevant Experience
@@ -108,9 +111,9 @@
 
 #### Contribution to OHC Repo (if applicable)
 
-1. https://github.com/ohcnetwork/care_fe/pull/16086
-2. https://github.com/ohcnetwork/care_fe/pull/16085
-3. https://github.com/ohcnetwork/care_fe/pull/15828
-4. https://github.com/ohcnetwork/care_fe/pull/15546
-5. https://github.com/ohcnetwork/care_fe/pull/15454
-6. https://github.com/ohcnetwork/care_fe/pull/15098
+1. <https://github.com/ohcnetwork/care_fe/pull/16086>
+2. <https://github.com/ohcnetwork/care_fe/pull/16085>
+3. <https://github.com/ohcnetwork/care_fe/pull/15828>
+4. <https://github.com/ohcnetwork/care_fe/pull/15546>
+5. <https://github.com/ohcnetwork/care_fe/pull/15454>
+6. <https://github.com/ohcnetwork/care_fe/pull/15098>
