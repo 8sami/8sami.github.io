@@ -98,16 +98,16 @@
 
     Below are the links to the Github repo and a YouTube video demonstration of the POC:
 
-    * **Github repo**: [https://github.com/8sami/im-wrapper](https://github.com/8sami/im-wrapper)
+    * **Github repo**: [https://github.com/8sami/im_wrapper_poc](https://github.com/8sami/im_wrapper_poc)
     * **YouTube video**: [https://www.youtube.com/watch?v=wKRil3z-d5s](https://www.youtube.com/watch?v=wKRil3z-d5s)
 
 
     **Additional Information:**
     * The word "WhatsApp" can be used interchangeably with any or all of the messaging apps/provider that could be integrated in the plugin in the future.
-    * During the development of POC, I had AI create me [im_wrapper_setup.sh](im_wrapper_setup.sh) script to help automate the setup and running of the development environment (which had started to become annoying doing daily, manually).
+    * During the development of POC, I had AI create me [im_wrapper_setup.sh](https://github.com/8sami/gsoc-proposal/blob/main/media/im_wrapper_setup.sh) script to help automate the setup and running of the development environment (which had started to become annoying doing daily, manually).
 
-        The script [im_wrapper_setup.sh](im_wrapper_setup.sh) pulls the latest changes from origin develop, rebuilds containers, loads fixtures, logins as admin, creates a service account, generates service account token, creates a read only role and assigns it to the service account, gets all organizations and assigns the service account to them, then updates the service account token and username in plug_config.py and then starts up ngrok on port 9000.
-    * I have also put together [plugin_setup.md](plugin_setup.md) to help with the setup of the POC plugin.
+        The script [im_wrapper_setup.sh](https://github.com/8sami/gsoc-proposal/blob/main/media/im_wrapper_setup.sh) pulls the latest changes from origin develop, rebuilds containers, loads fixtures, logins as admin, creates a service account, generates service account token, creates a read only role and assigns it to the service account, gets all organizations and assigns the service account to them, then updates the service account token and username in plug_config.py and then starts up ngrok on port 9000.
+    * I have also put together [plugin_setup.md](https://github.com/8sami/gsoc-proposal/blob/main/media/plugin_setup.md) to help with the setup of the POC plugin.
     * A few thoughts I had during the development of POC:
         * I wonder if the IM wrapper plugin will also need a frontend implementation (just like [scribe_fe](https://github.com/ohcnetwork/care_scribe_fe)) for providing users with the ability to download PDFs of invoices, medications etc, as sending these PDFs via WhatsApp might not be a good idea.
         * Will surely need a frontend implementation to be able to send notifications and alerts to patients and staff or maybe we could add a staff-only option to allow them to do this just by messaging the 'bot'.
