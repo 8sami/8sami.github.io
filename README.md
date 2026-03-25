@@ -64,26 +64,14 @@
     6. **Error Handling**: Proper error handling following care's implementation and guidelines.
     7. **Audit Logging**: Audit logging using the existing care.audit_log package of all important events.
     8. **Frontend**: The frontend of the plugin will be developed using [care_hello_fe](https://github.com/ohcnetwork/care_hello_fe) to allow requestors to download PDFs and (maybe) for rendering content too long to be sent as messages. Will also provide staff with ui to send out notifications and alerts.
-    9. **Notification**: Functionality to send alerts and notifications to staff and patients via configured messaging providers as background tasks.
-    10. **Testing**: Proper tests using pytest and coverage, using existing Makefile targets (eg, test and test-coverage) and playwright for frontend plugin testing.
-    11. **Documentation**: Documentation using sphinx and api documentation via swagger.
-  
-    **Flow of Program:**
-    This flowchart helps illustrates a high level flow of program of the IM Wrapper (excluding the alert functionality):
-
-    <a href="https://miro.com/app/board/uXjVG1KxNJM=/">
-    <img title="Click to open the flowchart in miro" src="media/flowchart.png" alt="flowchart illustrating the flow of program" width="800"/>
-    </a>
-
-    **Notification Implementation:**  <!-- modify this -->
-    To handle alerts like appointment reminders without blocking the main thread, the plugin will rely on CARE's existing Celery setup. 
-
-    The flow is pretty straightforward: we listen to django signals (like post_save on PatientConsultation or Appointment) which trigger a background Celery task. This task calls a send_notification method in the IM Wrapper. Since we are using a provider-based architecture, this method just formats the payload and sends it off, regardless of whether it's hitting Meta's WhatsApp API or Twilio. If the provider API rate-limits us or goes down, Celery's retry mechanism kicks in with exponential backoff so we don't drop messages.
+    9. **Notification**: To handle alerts asynchronously, the plugin will rely on care's existing celery setup. We listen to django signals which trigger a background celery task. The task will call a method in the IM wrapper that will just format the payload and send it off, regardless of the messaging provider. Celery's retry mechanism will trigger if any of the providers' API rate-limits us or goes down
+    10. **Testing**: Proper tests using pytest, coverage and playwright, taking inspiration from existing tests of care.
+    11. **Documentation**: Documentation using sphinx and swagger.
 
     **Proof of Concept:**
-    To support my claims and get hands on experience, I developed a working prototype of the IM Wrapper as a django plugin using the [django plugin cookiecutter template](https://github.com/ohcnetwork/care-plugin-cookiecutter) with the help of AI.
+    To support my claims and get hands on experience, I developed a working prototype of the IM wrapper as a django plugin using the [django plugin cookiecutter template](https://github.com/ohcnetwork/care-plugin-cookiecutter) with the help of AI.
 
-    My plan was to architect it as an IM provider which could be extended to support any messaging app. Since it's a proof of concept, I implemented the patient side of things and the WhatsApp provider only. There are many things that could have been done better and many things are intentionally kept simple, but I believe it is somewhat successful in properly conveying my ideas.
+    My plan was to architect it as an IM provider which could be extended to support any messaging app. Since it's a proof of concept, I only implemented the patient side of things and the WhatsApp provider. There are many things that could have been done better and many things are intentionally kept simple, but I believe it is somewhat successful in properly conveying my ideas.
     
     Below is the list of things I focused on implementing for the POC:
 
@@ -101,6 +89,11 @@
     * **Github repo**: [https://github.com/8sami/im_wrapper_poc](https://github.com/8sami/im_wrapper_poc)
     * **YouTube video**: [https://www.youtube.com/watch?v=wKRil3z-d5s](https://www.youtube.com/watch?v=wKRil3z-d5s)
 
+    This flowchart provides a high level 'flow of program' of the POC (click to view it in miro):
+
+    <a href="https://miro.com/app/board/uXjVG1KxNJM=/">
+    <img title="Click to open the flowchart in miro" src="media/flowchart.png" alt="flowchart illustrating the flow of program" width="800"/>
+    </a>
 
     **Additional Information:**
     * The word "WhatsApp" can be used interchangeably with any or all of the messaging apps/provider that could be integrated in the plugin in the future.
@@ -126,45 +119,54 @@
 
         <img title="Difference in time taken to access medical info" src="media/difference_in_time_taken.png" alt="image illustrating the difference b/w the time it takes to access info" width="800"/>
 
-* **Features**: <!-- modify this -->
-  1. **The Plugin Architecture**: It keeps the core codebase clean and makes it really easy to add new features without worrying about breaking existing implementations.
-  2. **Async Tasks using Celery**: It's great how background tasks like generating reports or sending emails are offloaded, keeping the API fast.
-  3. **Role-Based Access Control (RBAC)**: The permission system is very well thought out, ensuring strict boundaries between what a receptionist can see versus a doctor.
-  4. **Audit Logging**: The way care.audit_log tracks model changes without cluttering the business logic is really clean, which is essential for HIPAA compliance.
-  5. **Type Hints & Test Coverage**: Coming from a Typescript background, seeing extensive type hinting and a solid pytest suite makes the repository much easier to navigate and contribute to.
+* **Features**:
+  1. I honestly really liked the plugin approach and it was my first time seeing something like that. It's so good at keeping the core project clean and makes it really easy to add new features without worrying about breaking existing implementations... I will surely be using this approach in my own projects.
+  2. It was my first time seeing the implementation of RBAC based roles and permission too and I sure learned a lot. Although I don't complete get it right now, I can just feel how good it is implemented.
+  3. The care_scribe plugin was so amazing too! I read its docs completely, word to word. I really liked that filling up forms by hand is a seemingly minor inconvenience but how it's saving doctors and nurses quite a lot of time.
+  4. I have learned a lot contributing to the care_fe project and got to learn many new different things that I didn't knew existed before, so I am really grateful to the core team for welcoming me and helping me whenever I bothered them and I am not sure if I will be able to write about every minute thing here :D
 
 #### Technical Skills and Relevant Experience
 
 * My technical skills include python, javascript, typescript, react, nextjs, django, flask, SQL, git, github, docker, linux
-* My first full stack project, "Simple Invoice Generator" was built using django, weasyprint, crispy-bootstrap5 and jinja. That project recorded almost 2 Cr of transactions for a procurement service provider and then as I was developing its v2 using nextjs, shadcn, reactPDF and django ninja the business completed its tenure. I reviewed the code a few weeks ago... it needs a lot of work but I plan to deploy it as a free open source tool this year.
+* My first full stack project, "Simple Invoice Generator" was built using django, weasyprint, crispy-bootstrap5 and jinja. That project recorded almost 2 Cr of transactions for a procurement service provider and then as I was developing its v2 using nextjs, shadcn, reactPDF and django ninja the business completed its tenure and I had to stop its development. I reviewed the code a few weeks ago... it needs a lot of work but I plan to deploy it as a free open source tool this year.
 
     I have a YOE working as a software dev remotely for an Australian agency where I got the chance to work on production grade code across various projects using different technologies. Working in a high stakes environment has taught me a lot about problem solving while respecting tight deadlines.
 
 #### Implementation Timeline and Milestones
-<!-- modify this -->
-Taking a 3-phase approach for a 12-week mid-size project, the timeline is structured as follows:
+I propose a 3-phase approach for this 12 week medium project with the timeline and milestones being:
 
-**Phase 1: Backend Architecture & Core IM Integration (Weeks 1-4)**
-* **Week 1-2**: Scaffold the django plugin using the cookiecutter template. Implement the two-step authentication system (phone number matching and DOB confirmation) along with retry tracking and rate limiting.
-* **Week 3-4**: Establish rule-based authorization workflows aligning with Care's backend permissions. Implement caching logic using django-redis and PlugConfig cache invalidation to minimize database hits. Implement basic messaging flows and data querying logic.
-* **Deliverable & Milestone 1**: A functional, secure backend integration capable of serving basic patient queries securely to authenticated users through the IM provider.
+**Phase 1: Backend &  (Weeks 1-4)**
+* **Week 1**: Setup plugin repo using cookie cutter template (or use the POC), setup messaging providers' development environments and gather additional requirements.
+* **Week 2**: Implement core backend logic which includes authentication, input parsing, data fetching, data sanitization, output formatting, creating database models and building webhooks and api endpoints for IM providers.
+* **Week 3**: Work on caching, rate limiting, requests debouncing, audit logging and proper error handling.
+* **Week 4**: Write tests and comprehensive documentation.
+* **Deliverable & Milestone 1**: A functional backend plugin capable of serving patient and staff queries securely to authenticated users through different IM providers.
 
 **Phase 2: Frontend Plugin & Notification Engine (Weeks 5-8)**
-* **Week 5-6**: Develop the care-friendly notification functionality to trigger and dispatch automated alerts and system updates to staff and patients across messaging providers.
-* **Week 7-8**: Develop the frontend plugin using [care_hello_fe](https://github.com/ohcnetwork/care_hello_fe). Implement secure, "view once" link generation for downloading sensitive files (eg, invoices and medications) without sending PDFs directly via WhatsApp.
-* **Deliverable & Milestone 2**: Fully integrated notification engine and accessible frontend interface for bot management.
+* **Week 5**: Integrate the notification functionality using celery as asynhronous task queue and redis as message broker and the support for fetching and sending data for PDFs generation.
+* **Week 6**: Setup the frontend plugin, integrate it with the backend plugin and build the UI for sending out notifications and downloading PDFs.
+
+--- *Midterm Evaluation* ---
+
+* **Week 7**: Write tests and comprehensive documentation for both the frontend and notification functionality.
+* **Week 8**: Buffer week, ensure everything is up to speed, work on any pending or blocked tasks and prepare for the final phase.
+* **Deliverable & Milestone 2**: Fully functional and tested notification functionality and frontend of the plugin, working smoothly with the backend plugin.
 
 **Phase 3: Refinement, Audit Logging & Delivery (Weeks 9-12)**
-* **Week 9-10**: Deeply integrate the care.audit_log package to thoroughly track HIPAA-compliant events. Add exhaustive unit and integration testing via pytest and coverage, seamlessly orchestrated via Makefile targets, along with playwright.
-* **Week 11**: Address edge cases in conversational state management, refine sanitization processes to hide PII and finish writing API and installation documentation via Sphinx.
-* **Week 12**: Code cleanup, buffer for final bug fixes, preparation of the final GSoC project report and demo recording.
-* **Deliverable & Milestone 3**: A completely tested, documented and secure IM Wrapper system successfully merged and ready for production deployment within the CARE ecosystem.
+* **Week 9**: Handle edge cases, fix bugs related to performance and security.
+* **Week 10**: Buffer week, complete pending tasks and create deployments.
+* **Week 11**: Finalize the documentation, ensuring it is comprehensive, straightforward and easy to follow and prepare demo videos and guides for setting up and using the plugin.
+* **Week 12**: Prepare for final submission and presentation.
+* **Deliverable & Milestone 3**: A completely tested, documented, deployed IM wrapper system integrated in care and ready for production deployment.
 
-**Deliverables:** <!-- modify this -->
+--- *Final Evaluation and Submission :D* ---
+  
+**Deliverables:**
 1. A fully functional django plugin acting as the plugin backend.
 2. The frontend of the plugin developed using [care_hello_fe](https://github.com/ohcnetwork/care_hello_fe).
 3. Proper tests for both the backend and frontend.
-4. Documentation of api, plugin backend and frontend both. Along with demonstration videos and guides for setting up and using the plugin.
+4. Documentation of plugin's backend and frontend both. Along with demonstration videos and guides for setting up and using the plugin.
+5. Deployments of both backend and frontend plugin.
 
 #### Summary About Me
 
