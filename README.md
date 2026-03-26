@@ -143,7 +143,7 @@ I propose a 3-phase approach for this 12 week medium project with the timeline a
 * **Deliverable & Milestone 1**: A functional backend plugin capable of serving patient and staff queries securely to authenticated users through different IM providers.
 
 **Phase 2: Frontend Plugin & Notification Engine (Weeks 5-8)**
-* **Week 5**: Integrate the notification functionality using celery as asynhronous task queue and redis as message broker and the support for fetching and sending data for PDFs generation.
+* **Week 5**: Integrate the notification functionality using celery as asynchronous task queue and redis as message broker and the support for fetching and sending data for PDFs generation.
 * **Week 6**: Setup the frontend plugin, integrate it with the backend plugin and build the UI for sending out notifications and downloading PDFs.
 
 --- *Midterm Evaluation* ---
@@ -191,9 +191,7 @@ A short intro of me: [Watch on YouTube](https://youtube.com/shorts/5Gx_Yw9gSZU?s
   5. <https://github.com/ohcnetwork/care_fe/pull/15546>
   6. <https://github.com/ohcnetwork/care_fe/pull/15454>
   7. <https://github.com/ohcnetwork/care_fe/pull/15098>
-
 * **Issues**: 
   1. <https://github.com/ohcnetwork/care_fe/issues/15719>
   2. <https://github.com/ohcnetwork/care_fe/issues/15494>
-
 * I am not sure if I should mention this, but I lowkenuinely really love guiding and helping other people out in the community :D
