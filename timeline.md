@@ -24,7 +24,7 @@
 - Confirm the data models and API architecture with the engineering team
 - Confirm the agreed-upon behavior for edge cases:
   - What happens when a staff member and a patient share the same phone number?
-  - How should messages exceeding WhatsApp's character limit be handled: split into multiple messages, or redirect to a signed frontend URL?
+  - How should messages exceeding WhatsApp's 4,096 character limit be handled: split into multiple messages, or redirect to a signed frontend URL?
   - When a patient has multiple encounters, should the bot prompt them to select one, or aggregate data across all encounters?
 - Confirm which Care API endpoints the plugin will call and whether any new endpoints need to be added to Care core for the plugin to work
 
@@ -32,8 +32,13 @@
 
 - Apply for Meta Business account and complete the verification process
 - Set up the WhatsApp Business API
+ Complete phone number registration and **display name approval** (this is a separate process from Meta Business verification and can take several days)
 - Confirm webhook delivery is working end-to-end in the development environment using ngrok
-- Research and understand WhatsApp rate limits, message templates, and conversation window policies
+- Verify the **WABA-to-App webhook subscription is active** via `GET /{WABA_ID}/subscribed_apps`
+- Research and understand the current **per-message pricing model** (effective July 1, 2025): only delivered template messages are charged, free-form replies within a 24-hour customer service window (CSW) are free, utility templates sent within an open CSW are also free
+- Agree with mentors on message types for each notification flow: free-form (inside CSW) vs. pre-approved template (required outside CSW). Character limits differ: free-form text messages cap at **4,096 characters** and template bodies cap at **1,024 characters**
+- **Submit and obtain Meta approval for all proactive notification templates** (appointment reminders, lab result alerts, discharge notifications). Approval can take up to 24 hours and must happen before Week 6, not during it. Templates fall under the Utility category, which is free when sent within an open CSW and cheaply charged when sent cold
+- Raise HIPAA consent requirement with mentors: patients must explicitly consent to receiving PHI over WhatsApp before the plugin sends any health data to their number
 
 **Repository and environment setup:**
 
@@ -79,11 +84,14 @@
 **WhatsApp webhook:**
 
 - Implement the Meta challenge-response webhook verification flow
+- **The webhook endpoint must return HTTP 200 immediately** (within 5 seconds) on every POST. If it takes longer, Meta treats the delivery as failed and retries. All actual processing (state machine, Care API calls) must happen asynchronously via a Celery task enqueued inside the request handler. The request handler itself does nothing except validate the signature, enqueue the task, and return 200.
+- Implement **HMAC-SHA256 signature validation** on every inbound POST using the `X-Hub-Signature-256` header against the raw request body and the app secret. This is a hard security requirement in production, not optional.
 - Implement incoming message parsing using `parse_incoming` and map it to `NormalizedMessage`
 - Implement outgoing message dispatch via the WhatsApp Cloud API using `send_message`
 - Register the webhook URL in the plugin's URL configuration
+- WhatsApp does not guarantee webhook event ordering. Read receipts may arrive before delivery receipts, newer messages may arrive before older ones. The state machine must tolerate out-of-order delivery without corrupting session state.
 
-**Milestone:** Models are migrated. The WhatsApp webhook is live locally via ngrok, receives an incoming message, parses it correctly, and responds. WhatsApp API is authenticated.
+**Milestone:** Models are migrated. The WhatsApp webhook is live locally via ngrok, receives an incoming message, validates the signature, enqueues a Celery task, returns 200 immediately, and the task processes the message and sends a response. WhatsApp API is authenticated.
 
 ---
 
@@ -164,7 +172,7 @@
 **Rate limiting:**
 
 - Enforce per-phone-number rate limits on the webhook endpoint to prevent a single number from flooding the system
-- Enforce a global rate limit on outgoing WhatsApp API calls to stay within Meta's messaging limits and avoid overspending
+- Enforce a global rate limit on outgoing **template message** calls to stay within Meta's messaging tier limits. Meta's daily tier limits (1,000 / 10,000 / 100,000 unique users per day depending on quality rating) apply **only to business-initiated template messages**, free-form replies within an open CSW do not consume this quota. The rate limiting design must distinguish between these two classes of outgoing message
 - All thresholds must be configurable via the plugin's settings, not hardcoded
 
 **Request debouncing:**
@@ -213,6 +221,11 @@
 ### Week 6: June 29 to July 5
 
 **Goal:** Implement the asynchronous notification system.
+
+**Pre-requisite:** notification templates must already be approved before this week
+
+- All proactive notification templates (appointment reminders, lab result alerts, discharge notifications) must have been submitted and approved by Meta during the pre-coding period. Template approval can take up to 24 hours. Do not begin building the notification dispatch pipeline without confirmed template IDs. If templates are not yet approved, this week's milestone is at risk.
+- Proactive notifications (sent when no CSW is open) must use pre-approved **Utility category** templates. Utility templates sent within an active CSW are free. Marketing templates must not be used for clinical notifications.
 
 **Django signal listeners:**
 
@@ -310,9 +323,12 @@
 
 **Long message handling:**
 
-- Audit every data fetch handler to identify cases where the response could exceed WhatsApp's text character limit
-- For each such case, implement the agreed-upon strategy: either split the message into sequential numbered parts, or redirect the user to a signed frontend URL for the full content
-- Test with real data sets of varying sizes to confirm the cutoff logic is correct
+- Audit every data fetch handler to identify cases where the response could exceed WhatsApp's character limits:
+  - Free-form text messages (sent within a CSW): **4,096 character** hard limit
+  - Template message bodies (proactive notifications): **1,024 character** hard limit
+- For each free-form response that may exceed 4,096 characters, implement the agreed-upon strategy: either split the message into sequential numbered parts, or redirect the user to a signed frontend URL for the full content
+- For template bodies, ensure all notification templates are authored to fit within 1,024 characters including variable substitution (e.g. patient name, appointment time)
+- Test with real data sets of varying sizes to confirm the cutoff logic is correct for both limits
 
 **Edge case coverage:**
 
@@ -384,7 +400,8 @@
 - Architecture overview: how the plugin is structured, how it fits into Care, how the IM wrapper abstraction works
 - How to add a new IM provider: step-by-step guide for implementing a new `IMProvider` subclass and registering it, written for a developer who has never seen this codebase before
 - Configuration reference: every configurable setting (Redis TTL, rate limit thresholds, WhatsApp API credentials, signed URL expiry, etc.) documented with type, default value, and description
-- Deployment guide: how to install and configure the plugin in a production Care deployment, including WhatsApp Business API setup steps
+- Deployment guide: how to install and configure the plugin in a production Care deployment, including WhatsApp Business API setup steps.
+- If the webhook endpoint is unreachable for more than 7 days, Meta permanently drops undelivered webhook events with no dead-letter queue and no way to replay them. Deployment windows must account for this, the webhook must remain reachable or events will be silently lost.
 
 **Milestone:** Frontend test suite passes. API documentation and developer documentation are complete and reviewed.
 
