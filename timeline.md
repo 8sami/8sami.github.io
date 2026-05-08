@@ -24,7 +24,7 @@
 - Confirm the data models and API architecture with the engineering team
 - Confirm the agreed-upon behavior for edge cases:
   - What happens when a staff member and a patient share the same phone number?
-  - How should messages exceeding WhatsApp's 4,096 character limit be handled: split into multiple messages, or redirect to a signed frontend URL?
+  - How should messages exceeding WhatsApp's 4,096 character limit be handled: split into multiple messages, or redirect to a signed FE URL?
   - When a patient has multiple encounters, should the bot prompt them to select one, or aggregate data across all encounters?
 - Confirm which Care API endpoints the plugin will call and whether any new endpoints need to be added to Care core for the plugin to work
 
@@ -49,7 +49,7 @@
 
 **Codebase study:**
 
-- Read through `care_scribe` and `care_scribe_fe` completely to understand the patterns the team uses for plugin architecture, model design, API integration, and frontend plugin structure
+- Read through `care_scribe` and `care_scribe_fe` completely to understand the patterns the team uses for plugin architecture, model design, API integration, and FE plugin structure
 - Read Care's audit logging, RBAC, and Celery setup to understand what can be reused directly
 
 **Pending contributions:**
@@ -60,7 +60,7 @@
 
 ---
 
-## Phase 1: Backend Foundation
+## Phase 1: BE Foundation
 
 ### Week 1: May 25 to May 31
 
@@ -132,7 +132,7 @@
 
 **Patient-facing data access:**
 
-- Implement handlers for each patient menu option, calling the relevant Care backend API endpoints:
+- Implement handlers for each patient menu option, calling the relevant Care BE API endpoints:
   - Upcoming appointments schedules
   - Active medications list
   - Lab reports
@@ -154,7 +154,7 @@
 - Do not include sensitive PII fields unless they are explicitly required by the query
 - Log every data access event (what was fetched, by whom, and when) via `care.audit_log`
 
-**Milestone:** Both the patient and staff menus are fully functional over WhatsApp, returning live data from the Care backend with RBAC enforced.
+**Milestone:** Both the patient and staff menus are fully functional over WhatsApp, returning live data from the Care BE with RBAC enforced.
 
 ---
 
@@ -191,7 +191,7 @@
 **Error handling:**
 
 - WhatsApp Cloud API failures: catch API errors, log them, and send a user-facing fallback message.
-- Care backend API failures: catch connection errors and timeouts, log internally, and reply with a clean error message without exposing internal details
+- Care BE API failures: catch connection errors and timeouts, log internally, and reply with a clean error message without exposing internal details
 - Unexpected state transitions: if the state machine receives an input it does not expect in the current state, fall back to the main menu with a clear message rather than crashing
 - Blocked users attempting to message during a lockout period: respond with the lockout duration without processing the message further
 
@@ -216,7 +216,7 @@
 
 ---
 
-## Phase 3: Notifications and Frontend Plugin
+## Phase 3: Notifications and FE Plugin
 
 ### Week 6: June 29 to July 5
 
@@ -246,9 +246,9 @@
 
 **Notification status tracking:**
 
-- Staff should be able to see the status of outgoing notifications (pending, sent, failed, retried) via the frontend UI built in Week 7
+- Staff should be able to see the status of outgoing notifications (pending, sent, failed, retried) via the FE UI built in Week 7
 
-**Milestone (Midterm Deliverable):** A fully functional backend plugin capable of serving authenticated patient and staff queries via WhatsApp, with automated notifications firing in response to Care events. All audit logging, error handling, caching, and rate limiting are in place.
+**Milestone (Midterm Deliverable):** A fully functional BE plugin capable of serving authenticated patient and staff queries via WhatsApp, with automated notifications firing in response to Care events. All audit logging, error handling, caching, and rate limiting are in place.
 
 > **Midterm evaluation: July 6, 2026**
 
@@ -256,14 +256,14 @@
 
 ### Week 7: July 7 to July 12
 
-**Goal:** Set up the frontend plugin and implement the staff-facing notification management interface.
+**Goal:** Set up the FE plugin and implement the staff-facing notification management interface.
 
-**Frontend setup:**
+**FE setup:**
 
 - Initialize `care_im_wrapper_fe` using `care_hello_fe` as the base
-- Configure the frontend plugin to register within Care's frontend plugin system
+- Configure the FE plugin to register within Care's FE plugin system
 - Set up routing, layout, and shared component imports from `care_fe` where applicable
-- Implement the API client layer for communicating with the backend plugin's REST endpoints
+- Implement the API client layer for communicating with the BE plugin's REST endpoints
 
 **Notifications UI:**
 
@@ -272,9 +272,9 @@
   - Create notification form: recipient selection (individual patient, care team, or broadcast), message content, optional cron schedule for recurring notifications
   - Edit and delete for scheduled (not yet sent) notifications
   - Manual "Send Now" button for immediate one-off dispatch
-- RBAC enforcement: only users with the appropriate Care role can create, edit, or delete notifications. Read-only access for lower-privilege roles. Enforced on both the frontend (show/hide controls) and backend (API-level permission checks).
+- RBAC enforcement: only users with the appropriate Care role can create, edit, or delete notifications. Read-only access for lower-privilege roles. Enforced on both the FE (show/hide controls) and BE (API-level permission checks).
 
-**Backend API endpoints for the notification UI:**
+**BE API endpoints for the notification UI:**
 
 - `GET /notifications/`: paginated list with filters for status, date range, and recipient
 - `POST /notifications/`: create a new notification record
@@ -290,17 +290,17 @@
 
 **Goal:** Implement signed URL generation and the patient-facing document access page.
 
-**Signed URL generation (backend):**
+**Signed URL generation (BE):**
 
 - When a patient requests a document (lab report, medication list, encounter summary) and the content is too long for a WhatsApp message, generate a time-limited signed URL
 - The signed URL is stored in the `SignedLink` model with an expiry datetime (e.g. 24 hours) and a single-use flag
 - Send the signed URL to the patient via WhatsApp
-- On the backend, validate every request to a signed URL: check expiry, check the single-use flag, and reject invalid or expired links with a clear error response
+- On the BE, validate every request to a signed URL: check expiry, check the single-use flag, and reject invalid or expired links with a clear error response
 
-**Patient-facing document page (frontend):**
+**Patient-facing document page (FE):**
 
 - The patient opens the signed URL in any browser, no login required
-- The frontend verifies the link's validity by calling the backend, then renders the document:
+- The FE verifies the link's validity by calling the BE, then renders the document:
   - For PDFs (lab reports, prescriptions), render a preview using existing `care_fe` components where possible, with a download button
 - Expired links show a clear expiry message
 - Already-used single-use links show an appropriate message
@@ -308,7 +308,7 @@
 
 **CORS configuration:**
 
-- Ensure the backend plugin's API allows cross-origin requests from the frontend plugin's domain
+- Ensure the BE plugin's API allows cross-origin requests from the FE plugin's domain
 - Configure CORS headers correctly for both the signed URL endpoints and the notification management API
 
 **Milestone:** A patient receives a signed link on WhatsApp, opens it on their phone, sees a preview of their document, and can download it. Expired and used links are rejected cleanly.
@@ -326,14 +326,14 @@
 - Audit every data fetch handler to identify cases where the response could exceed WhatsApp's character limits:
   - Free-form text messages (sent within a CSW): **4,096 character** hard limit
   - Template message bodies (proactive notifications): **1,024 character** hard limit
-- For each free-form response that may exceed 4,096 characters, implement the agreed-upon strategy: either split the message into sequential numbered parts, or redirect the user to a signed frontend URL for the full content
+- For each free-form response that may exceed 4,096 characters, implement the agreed-upon strategy: either split the message into sequential numbered parts, or redirect the user to a signed FE URL for the full content
 - For template bodies, ensure all notification templates are authored to fit within 1,024 characters including variable substitution (e.g. patient name, appointment time)
 - Test with real data sets of varying sizes to confirm the cutoff logic is correct for both limits
 
 **Edge case coverage:**
 
 - Message arrives mid-session from a new device or after Redis TTL expiry: session should reset cleanly to `UNAUTHENTICATED` without error
-- Care backend is temporarily unavailable: every menu handler must fail gracefully with a user-facing message and an internal log entry, not an unhandled exception
+- Care BE is temporarily unavailable: every menu handler must fail gracefully with a user-facing message and an internal log entry, not an unhandled exception
 - A notification fails after all Celery retries are exhausted: the `IMNotification` record must be marked as permanently failed and the staff should see this in the UI
 - WhatsApp sends a duplicate webhook delivery (Meta guarantees at-least-once delivery): the system must be idempotent and not process the same message twice
 - The signed URL is accessed after expiry or after it has already been used: both cases must return a clean error page, not a 500
@@ -352,7 +352,7 @@
 
 ### Week 10: July 27 to August 2
 
-**Goal:** Write the complete backend test suite.
+**Goal:** Write the complete BE test suite.
 
 **Unit tests:**
 
@@ -374,15 +374,15 @@
 
 **Coverage:** Aim for meaningful coverage of all critical paths. Use `coverage` and review the report to identify any untested branches.
 
-**Milestone:** Backend test suite passes. All critical paths have test coverage.
+**Milestone:** BE test suite passes. All critical paths have test coverage.
 
 ---
 
 ### Week 11: August 3 to August 9
 
-**Goal:** Write the frontend test suite and complete all documentation.
+**Goal:** Write the FE test suite and complete all documentation.
 
-**Frontend tests (Playwright):**
+**FE tests (Playwright):**
 
 - Notification list page: renders notifications, filters work correctly, pagination works
 - Create notification form: valid submission creates a notification, invalid input shows validation errors, RBAC restriction hides form for unauthorized roles
@@ -391,7 +391,7 @@
 
 **API documentation:**
 
-- Generate documentation for all backend plugin API endpoints using swagger
+- Generate documentation for all BE plugin API endpoints using swagger
 - Every endpoint must be documented with request parameters, request body schema, response schema, and example responses
 - Authentication and permission requirements must be documented for each endpoint
 
@@ -403,7 +403,7 @@
 - Deployment guide: how to install and configure the plugin in a production Care deployment, including WhatsApp Business API setup steps.
 - If the webhook endpoint is unreachable for more than 7 days, Meta permanently drops undelivered webhook events with no dead-letter queue and no way to replay them. Deployment windows must account for this, the webhook must remain reachable or events will be silently lost.
 
-**Milestone:** Frontend test suite passes. API documentation and developer documentation are complete and reviewed.
+**Milestone:** FE test suite passes. API documentation and developer documentation are complete and reviewed.
 
 ---
 
@@ -414,7 +414,7 @@
 **Code cleanup:**
 
 - Remove all debug statements, commented-out code, unused imports, and TODO comments
-- Ensure consistent code style throughout both the backend and frontend plugin
+- Ensure consistent code style throughout both the BE and FE plugin
 - Ensure all public functions, classes, and methods have proper docstrings
 - Run linters and formatters one final time across both repos
 
@@ -422,9 +422,9 @@
 
 - Record a demonstration video of the patient flow: start from an unauthenticated message, complete auth, navigate the menu, request a lab report, receive a signed link, open the document page, and download
 - Record a demonstration video of the staff flow: authenticate, look up a patient, view their summary, trigger a manual notification via the WhatsApp bot, and verify delivery
-- Record a demonstration video of the frontend UI: notification management, creating a scheduled notification, viewing sent and failed notifications
+- Record a demonstration video of the FE UI: notification management, creating a scheduled notification, viewing sent and failed notifications
 - Write a setup guide covering how to install the plugin, configure WhatsApp API credentials, configure Redis and Celery, and run the first end-to-end test
-- Write a brief user guide for staff covering how to use the frontend notification panel
+- Write a brief user guide for staff covering how to use the FE notification panel
 
 **Final handover:**
 
@@ -433,7 +433,7 @@
 - All demonstration videos and guides linked from the repo READMEs
 - Final sync with mentors to confirm the handover is complete
 
-**Milestone (Final Deliverable):** A fully functional, tested, documented, and deployable IM Wrapper plugin for Care. Backend plugin handles patient and staff queries via WhatsApp with complete auth, RBAC, caching, rate limiting, audit logging, and async notifications. Frontend plugin provides staff with a notification management interface and patients with secure document access via signed URLs. The architecture is modular and ready for future provider integrations.
+**Milestone (Final Deliverable):** A fully functional, tested, documented, and deployable IM Wrapper plugin for Care. BE plugin handles patient and staff queries via WhatsApp with complete auth, RBAC, caching, rate limiting, audit logging, and async notifications. FE plugin provides staff with a notification management interface and patients with secure document access via signed URLs. The architecture is modular and ready for future provider integrations.
 
 > **Final evaluation and project handover: August 17, 2026**
 
@@ -443,11 +443,11 @@
 
 | # | Deliverable |
 |---|-------------|
-| 1 | `care_im_wrapper`: Django backend plugin with WhatsApp provider, two-step auth, state machine, patient and staff data access, caching, rate limiting, audit logging, and Celery-based notifications |
-| 2 | `care_im_wrapper_fe`: Frontend plugin built on `care_hello_fe` with staff notification management UI and patient-facing signed URL document access page |
-| 3 | Backend test suite using Django's `unittest`-style `APITestCase` with `model_bakery` for fixtures and `coverage` for reporting |
-| 4 | Frontend test suite using Playwright |
+| 1 | `care_im_wrapper`: Django BE plugin with WhatsApp provider, two-step auth, state machine, patient and staff data access, caching, rate limiting, audit logging, and Celery-based notifications |
+| 2 | `care_im_wrapper_fe`: FE plugin built on `care_hello_fe` with staff notification management UI and patient-facing signed URL document access page |
+| 3 | BE test suite using Django's `unittest`-style `APITestCase` with `model_bakery` for fixtures and `coverage` for reporting |
+| 4 | FE test suite using Playwright |
 | 5 | API documentation using Swagger |
 | 6 | Developer documentation using Sphinx including architecture overview, provider extension guide, configuration reference, and deployment guide |
-| 7 | Demo videos covering patient flow, staff flow, and frontend UI |
+| 7 | Demo videos covering patient flow, staff flow, and FE UI |
 | 8 | Setup guide and staff user guide |
