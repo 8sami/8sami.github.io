@@ -89,8 +89,89 @@
 
 **Date:** 29 June to 5 July 2026
 
-**Goal:** 
+**Goal:** I will focus on building the notification functionality's backend integration.
 
 **Which Includes:**
 
-- 
+- Figuring out when to trigger notifications using django signals.
+- Saving each notification with their status in the respective models and then dispatching them through background tasks using celery and redis.
+- Building the logic for scheduling notifications using celery beat.
+- Creating the respective APIs for performing CRUD and dispatching of the saved notifications.
+
+## Midterm Evaluation
+
+**Date:** 6 July 2026
+
+## Week 7
+
+**Date:** 6 July to 12 July 2026
+
+**Goal:** I will build the notification functionality's frontend.
+
+**Which Includes:**
+
+- Making a rough wireframe of the UI and getting approval for it.
+- Figuring out which existing components from `care_fe` can be reused.
+- Setting up routes, adding navigation links and building the UI using the APIs built in the previous week.
+- Doing manual testing of the frontend.
+
+## Week 8
+
+**Date:** 13 July to 19 July 2026
+
+**Goal:** I will implement the functionality for generating, saving and then fetching data and generating PDF documents based on those signed URLs. 
+
+**Which Includes:**
+
+- Like in the week 7, making a rough wireframe and getting approval for it.
+- Figuring out which existing components from `care_fe` can be reused for generating, previewing and downloading the PDF documents.
+- Writing logic for signed urls validation and routing.
+- Fetching data and generating the PDF documents for the user to preview and download (similar to how `care_fe` is doing it).
+- Ensuring the users are provided with the signed URLs and that they are being expired after use or after the validity period.
+- Making sure backend implementation is complete and functional before starting work on the frontend part.
+
+## Week 9
+
+**Date:** 20 July to 26 July 2026
+
+**Goal:** I will finalize the development by handling edge cases, doing manual testing, cleaning up code and implementing possible optimizations.
+
+**Which Includes:**
+
+- Testing every use case and scenario and ensuring that everything works as expected.
+- Trying out edge cases and writing logic for the unhandled ones.
+- CLeaning up code by removing redundant and unused code, implementing possible optimizations and doing final touches.
+- Catching up any unfinished task or resolving blockers.
+
+## Week 10
+
+**Date:** 27 July to 2 August 2026
+
+**Goal:** I will write tests and documentation for the backend plugin.
+
+**Which Includes:**
+
+- Writing tests for all the authentication, data fetching, RBAC enforcement, audit logging, data sanitization, caching, debouncing, rate limiting, notifications and signed URLs functionality etc
+- Documenting all the api routes with swagger
+- Documenting the rest of the backend implementation using sphinx.
+- Ensuring that all tests pass and has full test coverage.
+
+## Week 11
+
+**Date:** 3 August to 9 August 2026
+
+**Goal:** I will write tests and documentation for the frontend plugin.
+
+**Which Includes:**
+
+-
+
+## Week 12
+
+**Date:** 10 August to 16 August 2026
+
+**Goal:** I will create guides on how to install, use and develop the plugin and work with the team to deploy and handover the project.
+
+**Which Includes:**
+
+-
