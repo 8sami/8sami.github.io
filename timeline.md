@@ -10,9 +10,9 @@
 
 - Getting Meta Business, notifications templates, and display name verification done.
 - Getting appropriate access to the IW Wrapper Meta Developer App.
-- Setting up the FE (`care_hello_fe`) and BE (`care-plugin-cookiecutter`) plugin repos.
+- Setting up the FE (`create-care-mfe-plug`) and BE (`care-plugin-cookiecutter`) plugin repos.
 - Finalising the features, database schemas and overall implementation plan with mentors.
-- Studying the codebase and gaining knowledge about testing, docs and things I don't know about, eg: RBAC, Celery beat, `care.audit_log` package, `care_hello_fe` etc.
+- Studying the codebase and gaining knowledge about testing, docs and things I don't know about, eg: RBAC, Celery beat, `care.audit_log` package, `create-care-mfe-plug` etc.
 - Making sure all the assigned PRs in `care_fe` are merged.
 
 ## Coding Period
@@ -110,7 +110,7 @@
 
 **Which Includes:**
 
-- Making a rough wireframe of the UI and getting approval for it.
+- Making a rough figma wireframe of the UI and getting approval for it.
 - Figuring out which existing components from `care_fe` can be reused.
 - Setting up routes, adding navigation links and building the UI using the APIs built in the previous week.
 - Doing manual testing of the frontend.
@@ -123,7 +123,7 @@
 
 **Which Includes:**
 
-- Like in the week 7, making a rough wireframe and getting approval for it.
+- Like in the week 7, making a rough figma wireframe and getting approval for it.
 - Figuring out which existing components from `care_fe` can be reused for generating, previewing and downloading the PDF documents.
 - Writing logic for signed urls validation and routing.
 - Fetching data and generating the PDF documents for the user to preview and download (similar to how `care_fe` is doing it).
@@ -140,8 +140,8 @@
 
 - Testing every use case and scenario and ensuring that everything works as expected.
 - Trying out edge cases and writing logic for the unhandled ones.
-- CLeaning up code by removing redundant and unused code, implementing possible optimizations and doing final touches.
-- Catching up any unfinished task or resolving blockers.
+- Cleaning up code by removing redundant and unused code, implementing possible optimizations and doing final touches.
+- Catching up to any unfinished task or unresolved blockers.
 
 ## Week 10
 
@@ -151,7 +151,7 @@
 
 **Which Includes:**
 
-- Writing tests for all the authentication, data fetching, RBAC enforcement, audit logging, data sanitization, caching, debouncing, rate limiting, notifications and signed URLs functionality etc
+- Writing tests for all the major functionalities such as authentication, data fetching, RBAC enforcement, audit logging, data sanitization, caching, debouncing, rate limiting, notifications and signed URLs functionality etc
 - Documenting all the api routes with swagger
 - Documenting the rest of the backend implementation using sphinx.
 - Ensuring that all tests pass and has full test coverage.
@@ -164,7 +164,9 @@
 
 **Which Includes:**
 
--
+- Writing tests covering all the functionalities of the frontend plugin using playwright.
+- Documenting each and everything using mdx and saving it in the `/docs` folder at the root level.
+- Ensuring each test passes.
 
 ## Week 12
 
@@ -174,4 +176,11 @@
 
 **Which Includes:**
 
--
+- Creating detailed and comprehensive guides on how to install, use and develop the plugins.
+- Working with the team to make deployments.
+- Preparing for the final submission.
+- Handing over all the finished work and keep contributing.
+
+## Final submission
+
+**Date:** 17 August 2026
