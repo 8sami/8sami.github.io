@@ -9,7 +9,7 @@
 **Which Includes:**
 
 - Getting Meta Business, notifications templates, and display name verification done.
-- Getting appropriate access to the IW Wrapper Meta Developer App.
+- Getting appropriate access to the IM Wrapper Meta Developer App.
 - Setting up the FE (`create-care-mfe-plug`) and BE (`care-plugin-cookiecutter`) plugin repos.
 - Finalising the features, database schemas and overall implementation plan with mentors.
 - Studying the codebase and gaining knowledge about testing, docs and things I don't know about, eg: RBAC, Celery beat, `care.audit_log` package, `create-care-mfe-plug` etc.
@@ -37,10 +37,10 @@
 
 **Which Includes:**
 
-- Writing the 2-step auth logic by matching the inbound message's phone number against patients' and staff's phone numbers and then prompting for the DOB to match against the year of birth/DOB for both.
+- Writing the 2-step auth logic by matching the inbound message's phone number against patients' and staffs' phone numbers and then prompting for the DOB to match against the year of birth/DOB for both.
 - Writing logic for handling cases where a patient's phone number is same as a staff member's phone number or when multiple patients have the same phone number.
-- Writing logic for creating and storing the auth session and upating the conversation state.
-- Writing logic for enforcing a cooldown period after a number of incorrect DOB/birth of year are provided.
+- Creating and storing the auth session and upating the conversation state.
+- Enforcing a cooldown period after a number of incorrect DOB/birth of year are provided.
 
 ## Week 3
 
@@ -59,7 +59,7 @@
   - Lab reports
   - Patient lookup using their phone number or name (staff only)
 - Enforcing RBAC using the technique suggested by [yaswanth on slack](https://rebuildearth.slack.com/archives/C010GQBMFJ9/p1778014189612319?thread_ts=1778002950.083649&cid=C010GQBMFJ9).
-- Writing logic for generating and returning signed urls for PDF documents.
+- Will try to write logic for generating and returning signed urls for PDF documents.
 
 ## Week 4
 
@@ -181,6 +181,6 @@
 - Preparing for the final submission.
 - Handing over all the finished work and keep contributing.
 
-## Final submission
+## Final Submission
 
 **Date:** 17 August 2026
