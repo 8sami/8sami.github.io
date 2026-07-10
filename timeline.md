@@ -26,7 +26,7 @@
 **Which Includes:**
 
 - Defining the Base IM Provider abstract class with the appropriate methods for fetching data, sending, receiving and parsing messages.
-- Building the models for managing sessions, notifications, and signed urls.
+- Building the models for managing sessions, notifications, and signed urls. _[signed urls model deferred to week 8]_
 - Defining webhooks for completing providers' verification challenge.
 
 ## Week 2
@@ -59,7 +59,7 @@
   - Lab reports
   - Patient lookup using their phone number or name (staff only)
 - Enforcing RBAC using the technique suggested by [yaswanth on slack](https://rebuildearth.slack.com/archives/C010GQBMFJ9/p1778014189612319?thread_ts=1778002950.083649&cid=C010GQBMFJ9).
-- Will try to write logic for generating and returning signed urls for PDF documents.
+- Will try to write logic for generating and returning signed urls for PDF documents. _[deferred to week 8]_
 
 ## Week 4
 
@@ -97,6 +97,7 @@
 - Saving each notification with their status in the respective models and then dispatching them through background tasks using celery and redis.
 - Building the logic for scheduling notifications using celery beat.
 - Creating the respective APIs for performing CRUD and dispatching of the saved notifications.
+- _[Only implemented notifications for appointment booked, appointment cancelled and appointment rescheduled. Rest of the 4 uses cases have been deferred to week 9]_
 
 ## Midterm Evaluation
 
@@ -123,6 +124,8 @@
 
 **Which Includes:**
 
+- _[Creating the models for storing the signed URLs]_
+- _[Writing logic for generating, saving and fetching the signed URLs for PDF documents.]_
 - Like in the week 7, making a rough figma wireframe and getting approval for it.
 - Figuring out which existing components from `care_fe` can be reused for generating, previewing and downloading the PDF documents.
 - Writing logic for signed urls validation and routing.
@@ -138,6 +141,7 @@
 
 **Which Includes:**
 
+- _[Implementing the remaining 4 use cases for notifications in code]_
 - Testing every use case and scenario and ensuring that everything works as expected.
 - Trying out edge cases and writing logic for the unhandled ones.
 - Cleaning up code by removing redundant and unused code, implementing possible optimizations and doing final touches.
